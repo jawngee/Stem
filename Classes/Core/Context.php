@@ -729,6 +729,13 @@ class Context {
 
         // TODO: Relative URL filtering
 
+
+        if (isset($this->config['clean']['replace'])) {
+            foreach($this->config['clean']['replace'] as $toreplace => $withwhat) {
+                $footer=str_replace($toreplace,$withwhat,$footer);
+            }
+        }
+
         return $footer;
     }
 
