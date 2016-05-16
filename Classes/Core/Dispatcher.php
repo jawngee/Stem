@@ -32,6 +32,8 @@ class Dispatcher {
      * @throws \Exception
      */
     private function dispatchTemplate($templateName, $pageType) {
+        error_log("Looking for ... $templateName");
+
         if (is_array($templateName))
         {
             foreach ($templateName as $name)
@@ -42,8 +44,6 @@ class Dispatcher {
         }
         else
         {
-            error_log("Looking for ... $templateName");
-
             // normalize the name, eg front_page becomes front-page
             $name=preg_replace('|[^a-z0-9_]+|', '-',$templateName);
 
@@ -69,6 +69,7 @@ class Dispatcher {
             // If the controller exists, create it ...
             if (class_exists($class))
             {
+                error_log("Found controller ... $class");
                 $controller = new $class($this->context);
             }
             else
@@ -76,6 +77,8 @@ class Dispatcher {
                 // Otherwise, we check to see if the template exists.
                 if (file_exists($this->context->viewPath.'templates/'.$name.'.php'))
                 {
+                    error_log("Found template ... $name");
+
                     if ($pageType=='none')
                     {
                         // Template exists but page type doesn't map to a built-in
@@ -118,9 +121,12 @@ class Dispatcher {
                 return true;
             }
 
+            error_log("No Controller Found ... $templateName");
+
             return false;
         }
 
+        error_log("No Template Found ... $templateName");
         return false;
     }
 
