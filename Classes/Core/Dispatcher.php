@@ -32,18 +32,19 @@ class Dispatcher {
      * @throws \Exception
      */
     private function dispatchTemplate($templateName, $pageType) {
-        error_log("Looking for ... $templateName");
 
         if (is_array($templateName))
         {
             foreach ($templateName as $name)
             {
+                error_log("Looking for ... $name");
                 if ($this->dispatchTemplate($name,$pageType))
                     return true;
             }
         }
         else
         {
+            error_log("Looking for ... $templateName");
             // normalize the name, eg front_page becomes front-page
             $name=preg_replace('|[^a-z0-9_]+|', '-',$templateName);
 
