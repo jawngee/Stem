@@ -660,6 +660,16 @@ class Context {
 			// change the wordpress search
 			add_filter('posts_where', function($where, $query) {
 				global $wpdb;
+
+				$tax_types = $this->setting('search-options/search-taxonomies', null);
+				if (!$tax_types)
+					$tax_types=['category', 'post_tag'];
+
+				for($i=0; $i<count($tax_types); $i++)
+					$tax_types[$i]="'{$tax_types[$i]}'";
+
+				$tax_types_list = implode(',',$tax_types);
+
 				if ($query->is_main_query() && $query->is_search()) {
 					$user       = wp_get_current_user();
 					$user_where = '';
@@ -672,7 +682,7 @@ class Context {
 					$user_where .= " AND {$wpdb->posts}.post_status IN( " . implode(',', $status) . " )";
 
 					$where .= " OR (
-                            {$wpdb->term_taxonomy}.taxonomy IN( 'category', 'post_tag' )
+                            {$wpdb->term_taxonomy}.taxonomy IN( {$tax_types_list} )
                             AND
                             {$wpdb->terms}.name LIKE '%" . esc_sql(get_query_var('s')) . "%'
                             {$user_where}
