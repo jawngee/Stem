@@ -208,14 +208,18 @@ class Context {
 		$this->siteHost = parse_url(site_url(), PHP_URL_HOST);
 		$this->httpHost = $_SERVER['HTTP_HOST'];
 
-		if (!file_exists($rootPath . '/config/app.json'))
+		if (file_exists($rootPath. '/config/app.php')) {
+			$this->config = include $rootPath. '/config/app.php';
+		} else  if (file_exists($rootPath . '/config/app.json')) {
+			$this->config = JSONParser::parse(file_get_contents($rootPath . '/config/app.json'));
+		} else {
 			throw new \Exception('Missing app.json for theme.');
+		}
 
 		// Create the request object
 		$this->request     = Request::createFromGlobals();
 		$this->environment = getenv('WP_ENV') ?: 'development';
 		$this->debug = (defined(WP_DEBUG) || ($this->environment == 'development'));
-		$this->config      = JSONParser::parse(file_get_contents($rootPath . '/config/app.json'));
 
 		// Initialize logging
 		$loggingConfig = null;
