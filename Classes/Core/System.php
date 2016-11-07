@@ -19,7 +19,11 @@ function arrayPath($array, $path, $defaultValue = null) {
 			return $defaultValue;
 
 		if ($i == count($pathArray) - 1) {
-			return $config[$part];
+			$val = $config[$part];
+			if ($val instanceof \Closure)
+				return $val();
+
+			return $val;
 		}
 
 		$config = $config[$part];

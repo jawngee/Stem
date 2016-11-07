@@ -390,24 +390,7 @@ class Context {
 	 * @return bool|mixed The result
 	 */
 	public function setting($settingPath, $default = false) {
-		$path = explode('/', $settingPath);
-
-		$config = $this->config;
-
-		for ($i = 0; $i < count($path); $i ++) {
-			$part = $path[$i];
-
-			if (!isset($config[$part]))
-				return $default;
-
-			if ($i == count($path) - 1) {
-				return $config[$part];
-			}
-
-			$config = $config[$part];
-		}
-
-		return $default;
+		return arrayPath($this->config, $settingPath, $default);
 	}
 
 	/**
