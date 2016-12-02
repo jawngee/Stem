@@ -65,10 +65,13 @@ class StemView extends View {
 
     protected $data;
 
+	protected $view;
+
     public function __construct(Context $context, $viewName)
     {
         parent::__construct($context, $viewName);
 
+	    $this->view = $viewName;
         $this->currentBlocks=[];
         $this->currentData=[];
         $this->blocks=[];
@@ -300,7 +303,7 @@ class StemView extends View {
     public static function renderView(Context $context, $view, $data) {
         try {
             ob_start();
-            $view=new StemView($context, $view);
+            $view=new StemView($context ?: Context::current(), $view);
             $result=$view->render($data);
             ob_end_clean();
 
@@ -320,7 +323,7 @@ class StemView extends View {
     }
 
     private static function renderErrorView(ViewException $ex) {
-        $view=new StemView(null,'error');
+        $view=new StemView(Context::current(),'error');
         return $view->render(['message'=>$ex->getMessage(),
                               'line'=>$ex->getLine(),
                               'original'=>$ex->getOriginal(),
