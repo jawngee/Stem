@@ -949,9 +949,8 @@ class Context {
 		ob_start();
 
 		wp_head();
-		$header = ob_get_clean();
 
-		return $header;
+		return apply_filters('stem/header', ob_get_clean());
 	}
 
 	/**
@@ -963,9 +962,8 @@ class Context {
 		ob_start();
 
 		wp_footer();
-		$footer = ob_get_clean();
 
-		return $footer;
+		return apply_filters('stem/footer', ob_get_clean());
 	}
 
 	/**
